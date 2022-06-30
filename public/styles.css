@@ -1,0 +1,81 @@
+
+body.home{
+  background-color: #E8ECEF;
+  background-image: url("pics/main.png");
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;
+background-position: center;
+}
+
+body.lbg{
+  background-color: #E8ECEF;
+  background-image: url("pics/bg.jpg");
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;
+background-position: center;
+
+}
+.bgcolor{
+  background-color: transparent;
+}
+
+.centered {
+    padding-top: 200px;
+    text-align: center;
+}
+
+.secret-text {
+  text-align: center;
+  font-size: 2rem;
+  color: #fff;
+  background-color: #000;
+}
+
+.pos{
+
+  right: 200px;
+}
+#btn1{
+  float: left;
+  position: absolute;
+  bottom: 30px;
+  left: 200px;
+}
+#btn3{
+  float: right;
+  position: absolute;
+  bottom:30px;
+  right: 200px;
+}
+#btn2{
+  float: right;
+  position: absolute;
+  bottom:30px;
+  right: 900px;
+}
+
+.flex{
+  display: flex;
+  flex-direction: row;
+}
+
+#input{
+  margin-top: 30px;
+  position: absolute;
+  right: 30px;
+}
+.g-3{
+  margin-top: 50px;
+  position: relative;
+}
+#search{
+position: absolute;
+right: 100px;
+}
+
+#button{
+  position: absolute;
+  right: 10px;
+}

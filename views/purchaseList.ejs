@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+
+
+<body
+
+<div class="container">
+  <div class="jumbotron centered">
+
+    <h1 class="display-3">Puchase List</h1>
+  <% bookNames.forEach(function(user){ %>
+    <p class="lead"><%=user.books%></p>
+  <%})%>
+
+<hr>
+    <form action="/purchaseList" method="POST">
+      <div class="form-group">
+        <input type="text" class="form-control text-center" name="bookname" placeholder="Add Books">
+      </div>
+      <button type="submit" class="btn btn-dark">Add</button>
+    </form>
+
+
+  </div>
+</div>
+
+
+<%- include('partials/footer') %>

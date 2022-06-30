@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+
+<body class="home">
+
+
+<div class="container">
+  <form class="row g-3"  action="/bookHomepage" method="post" autocomplete="off">
+  <div id="search" class="col-auto">
+    <input class="form-control" id="name" type="text" name="bookName" placeholder="Search books!....">
+  </div>
+
+    <div id="button" class="col-auto">
+      <button   class="btn btn-primary" type="submit" name="button">Search</button>
+    </div>
+  </form>
+</div>
+
+
+
+  <div class="container">
+    <a href="/logout" id="btn1" class="btn btn-dark btn-lg span4 text-left " role="button">Log Out</a>
+    <a href="/purchaseList"  id="btn2"class="btn btn-dark btn-lg span4 text-center" role="button">Purchase List</a>
+    <a href="/logout" id="btn3" class="btn btn-dark btn-lg span4 text-right" role="button">Sell List</a>
+  </div>
+
+
+
+
+
+<%- include('partials/footer') %>
