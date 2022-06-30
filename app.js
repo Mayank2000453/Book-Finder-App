@@ -30,7 +30,8 @@ mongoose.connect("mongodb://localhost:27017/booksDB")
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
-  books: String
+  books: String,
+  purchase: [{days:String}]
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -57,71 +58,11 @@ const booksSchema = {
 }
 
 const Book = new mongoose.model("Book", booksSchema);
-
-//------------------FOR BOOKS-------------------------------------------------//
-
-app.route("/books").get(function(req,res){
-  Book.find(function(err,foundArticles)
-  {
-  if(!err)
-  {
-    res.send(foundArticles);
-  }
-  else{
-    res.send(err);
-  }
-  });
-});
-
-
-app.route("/books/:bookKind")
-.get(function(req,res)
-{
-  Book.findOne({kind: req.params.bookKind}, function(err,foundArticles)
-{
-   if(foundArticles)
-   {
-     res.send(foundArticles);
-   }
-   else{
-     res.render("error");
-   }
-});
-});
-
-// app.get("/bookHomepage",function(req,res)
-// {
-//
-//
-// })
 app.post("/bookHomepage",function(req,res)
 {
 let kind = req.body.bookName;
 res.redirect("/books/"+kind)
 });
-
-// --------------------------------------------------------------------
-// app.route("/shoopingList").get()
-// .post(function(req,res)
-// {
-//   let nameOfBook = req.body.bookName;
-// })
-// .put(function(req,res)
-// {
-//   User.updateOne(
-//     { email: req.body.username},
-//     { $push : {title: req.body.bookName}},
-//     function(err, result)
-//     {
-//       if(!err)
-//       {
-//         res.redirect("/register/"+req.body.username);
-//       }
-//       else{res.send(err);}
-//     }
-//   )
-// })
-
 
 //--------------------REGISTER---------------------------------------------//
 
@@ -132,27 +73,6 @@ app.get("/home", function(req,res){
     res.redirect("/login");
   }
 })
-
-// -------------------Home for authentication--------------------------------//
-
-app.get("/register", function(req,res){
-  res.render("register");
-})
-
-app.post("/register",function(req,res){
-User.register({username: req.body.username},req.body.password, function(err,user){
-  if(err){
-    console.log(err);
-    res.redirect("/register");
-  }else{
-    passport.authenticate("local")(req,res,function(){
-      res.redirect("/home");
-    })
-  }
-});
-});
-
-
 //----------------------Login and LogOut--------------------------------------//
 
 app.route("/login")
@@ -219,113 +139,131 @@ if(err){
 }
 });
 });
-
-//  API for purchase list
-// 
-// app.get("/purchaseList/all/:anonymmous",function(req,res){
-// User.findOne({})
-// })
-
-
-// app.route("/purchaseList/:anonymmous")
-// .get(function(req,res)
-// {
-//   const name = req.params.anonymmous;
-//   const currUser = req.user._id;
-//   User.find(function(err,foundUser){
-//     res.send(0.books)
-//   }
-// });
-
-
-
-// ------Update books in the list--------------------------------------------//
-
-
-
-
-// --------------Update and Delete  CUSTOM--------------------------------------//
-app.route("/register/:anonymmous")
-.get(function(req,res)
-{
-const name = req.params.anonymmous;
-
-if(name === "all")
-{
-  User.find(function(err, foundUsers)
-  {
-    res.send(foundUsers);
-  })
-}
-else{
-
-  User.findOne({email: req.params.anonymmous},function(err,foundUser)
-{
-if(foundUser){
-  res.send(foundUser);
-}else{
-  res.send("No user found");
-}
-});
-}
-})
-.put(function(req,res)
-{
-  User.updateOne(
-    { email: req.body.username},
-    { $push : {title: req.body.bookName}},
-    function(err, result)
-    {
-      if(!err)
-      {
-        res.redirect("/register/"+req.body.username);
-      }
-      else{res.send(err);}
-    }
-  );
-    // User.updateMany(
-    //   {email: req.params.anonymmous},
-    //   {email: req.body.email, password: req.body.password},
-    //   {overwrite: true},
-    //   function(err)
-    //   {
-    //     if(!err)
-    //     {
-    //       res.send("Succesfully Updated");
-    //     }
-    //     else{
-    //       res.send(err);
-    //     }
-    //   }
-    // );
-})
-.delete(function(req,res)
-{
-  User.deleteOne(
-      {email: req.params.anonymmous},
-      function(err)
-      {
-        if(!err)
-        {
-          res.send("Deleted Succesfully");
-        }else{
-          res.send(err);
-        }
-      }
-  )
-});
-
-
-
-
-
 // -----------Home page-------------------------------------------------------//
 app.get("/", function(req,res)
 {
   res.render("home");
 });
 
-// ---------------------------------------------------------------------------//
+// ---------------------------------API's---------------------------------------//
+
+// 1. Find All Kind Books
+app.route("/books").get(function(req,res){
+  Book.find(function(err,foundArticles)
+  {
+  if(!err)
+  {
+    res.send(foundArticles);
+  }
+  else{
+    res.send(err);
+  }
+  });
+});
+
+// 2. Find all Books of a specific kind
+app.route("/books/:bookKind")
+.get(function(req,res)
+{
+  Book.findOne({kind: req.params.bookKind}, function(err,foundArticles)
+{
+   if(foundArticles)
+   {
+     res.send(foundArticles);
+   }
+   else{
+     res.render("error");
+   }
+});
+});
+
+//------------Create-------------------------------------------------------//
+app.get("/register", function(req,res){
+  res.render("register");
+})
+
+app.post("/register",function(req,res){
+User.register({username: req.body.username},req.body.password, function(err,user){
+  if(err){
+    console.log(err);
+    res.redirect("/register");
+  }else{
+    passport.authenticate("local")(req,res,function(){
+      res.redirect("/home");
+    })
+  }
+});
+});
+
+//--------------------------Read------------------------------------------//
+
+//1. Read user details by entering the email id
+app.get("/register/:name", function(req,res){
+
+  if(req.params.name === "all")
+  {
+    User.find(function(err, foundUsers)
+    {
+      res.send(foundUsers);
+    });
+  }
+  else{
+    User.findOne({username: req.params.name}, function(err, foundUser){
+      if(foundUser){
+        res.send(foundUser);
+      }else{
+        res.send("No user found");
+      }
+    });
+  }
+});
+
+
+// -------------------------------Update-------------------------------------//
+// 1. Using patch to update user email
+app.patch("/register/:name", function(req,res){
+User.update({username: req.params.name},{$set:req.body},function(err){
+  if(!err){
+    res.send("Succesfully Updated");
+  }else{
+    res.send(err);
+  }
+});
+});
+
+//2. Purchased Book history
+// app.patch("/register/:name", function(req,res){
+// User.update({username: req.params.name},{$push:{purchase: {days:req.body}}},function(err){
+//   if(!err){
+//     res.send("Succesfully Updated");
+//   }else{
+//     res.send(err);
+//   }
+// });
+// });
+
+// 3. Sell Book history
+//------------------------------Purchase List---------------------------------//
+// app.get("/register/history/purchase", function(req,res){
+//
+// })
+
+//---------------------------------Delete------------------------------------//
+app.delete("/register/:name", function(req,res){
+User.deleteOne({username: req.params.name},function(err){
+  if(!err){
+    res.send("Succesfully Updated");
+  }else{
+    res.send(err);
+  }
+});
+});
+
+
+
+
+
+
 
 
 
