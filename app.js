@@ -193,8 +193,8 @@ User.register({username: req.body.username},req.body.password, function(err,user
     res.redirect("/register");
   }else{
     passport.authenticate("local")(req,res,function(){
-    //  res.send("Succesfull");
-      res.redirect("/home");
+      res.send("Succesfull");
+      // res.redirect("/home");
     })
   }
 });
