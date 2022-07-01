@@ -26,12 +26,16 @@ app.use(passport.session());
 mongoose.connect("mongodb://localhost:27017/booksDB")
 //
 
+
 //---------For login and register-----------------------
 const userSchema = new mongoose.Schema({
+  username: String,
   email: String,
   password: String,
-  books: String,
-  purchase: [{days:String}]
+  history:{
+    purchase:[{date: String, noOfBooks: Number }],
+    sellHist: [{date: String, noOfBooks: Number }]
+  }
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -68,7 +72,7 @@ res.redirect("/books/"+kind)
 
 app.get("/home", function(req,res){
   if(req.isAuthenticated()){
-    res.render("bookHomepage",{userId: req.body.username});
+    res.render("bookHomepage",{userId: req.user.username});
   }else{
     res.redirect("/login");
   }
@@ -189,6 +193,7 @@ User.register({username: req.body.username},req.body.password, function(err,user
     res.redirect("/register");
   }else{
     passport.authenticate("local")(req,res,function(){
+    //  res.send("Succesfull");
       res.redirect("/home");
     })
   }
@@ -238,30 +243,17 @@ User.deleteOne({username: req.params.name},function(err){
 });
 });
 
-// 2. Purchased Book history
-app.patch("/register/:name", function(req,res){
-User.update({username: req.params.name},{$push:{purchase: {days:req.body}}},function(err){
-  if(!err){
-    res.send("Succesfully Updated");
-  }else{
-    res.send(err);
+// 2. Purchased and Sell
+
+app.get("/register/history/:name", function(req,res){
+User.find({username: req.params.name}, function(err,foundUser){
+
+  if(foundUser){
+    res.send(foundUser[0].history);
+  }else{res.send(err)}
   }
-});
-});
 
-// 3. Sell Book history
-//------------------------------Purchase List---------------------------------//
-// app.get("/register/history/purchase", function(req,res){
-//
-// })n
-
-
-
-
-
-
-
-
+)});
 
 
 
