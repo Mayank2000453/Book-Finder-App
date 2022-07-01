@@ -23,7 +23,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/booksDB")
+mongoose.connect("mongodb+srv://admin-mayank:mayank2000@cluster0.6r76q.mongodb.net/booksDB")
 //
 
 
@@ -193,8 +193,8 @@ User.register({username: req.body.username},req.body.password, function(err,user
     res.redirect("/register");
   }else{
     passport.authenticate("local")(req,res,function(){
-      res.send("Succesfull");
-      // res.redirect("/home");
+      // res.send("Succesfull");
+      res.redirect("/home");
     })
   }
 });
