@@ -33,6 +33,11 @@ background-position: center;
   background-color: #000;
 }
 
+
+#bgimg{
+  background-image: url("pics/bgl.jpg")
+}
+
 .pos{
 
   right: 200px;
